@@ -1916,7 +1916,12 @@ Qed.
 
 Theorem excluded_middle_irrefutable: forall (P : Prop),
   ~ ~ (P \/ ~ P).
-Proof. Admitted.
+Proof.
+  intros P H. apply de_morgan_not_or in H.
+  destruct H as [H1 H2].
+  apply H2 in H1. destruct H1.
+Qed.
+
   
 (** [] *)
 
@@ -1938,7 +1943,17 @@ Theorem not_exists_dist :
   forall (X:Type) (P : X -> Prop),
     ~ (exists x, ~ P x) -> (forall x, P x).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros Aex.
+  intros X P.
+  intros H.
+  intros x.
+  assert(L: P x\/ ~ P x). apply Aex.
+  destruct L as [EP | EnP].
+  - apply EP.
+  - assert(L': exists x : X, ~ P x). exists x. apply EnP.
+    apply H in L'. destruct L'.
+Qed.
+
 (** [] *)
 
 (** **** Exercise: 5 stars, standard, optional (classical_axioms)
